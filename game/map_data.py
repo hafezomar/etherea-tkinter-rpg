@@ -18,7 +18,7 @@ def make_enemy(kind: EnemyKind, x: int, y: int) -> Enemy:
         EnemyKind.OVERSEER: (22, 8, 0, 10, "O", "#70c7d4"),
         EnemyKind.SEALBOUND_KNIGHT: (42, 10, 4, 17, "K", "#aeb4c4"),
         EnemyKind.BLOODBOUND_PILGRIM: (34, 11, 2, 15, "B", "#a93b55"),
-        EnemyKind.VAELRITH: (125, 16, 5, 120, "V", "#d61f48"),
+        EnemyKind.VAELRITH: (85, 16, 5, 120, "V", "#d61f48"),
     }
     hp, attack, defense, shards, glyph, color = values[kind]
     return Enemy(kind, x, y, hp, hp, attack, defense, shards, glyph, color)
