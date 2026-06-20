@@ -60,8 +60,10 @@ python main.py
 | `R` | Recover a small amount of focus |
 | `B` | Save the current run |
 | `L` | Load the saved run |
+| `F11` | Toggle fullscreen |
+| `Esc` | Leave fullscreen |
 
-Moving into an enemy tile attacks it directly. Gold exit tiles only open once the chamber is fully cleared.
+Moving into an enemy tile attacks it directly. Gold exit tiles only open once the chamber is fully cleared. Shrines and the shard shop pause the game until a choice is made — all other input is blocked until resolved.
 
 ## Classes
 

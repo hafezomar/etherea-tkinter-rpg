@@ -21,6 +21,7 @@ class EthereaApp:
         self.root.title("Etherea: Blood Wing")
         self.root.configure(bg="#120f18")
         self.root.resizable(False, False)
+        self.fullscreen = False
         self.save_path = Path(__file__).parent / "saves" / "blood_wing_save.json"
         self.state = GameState()
         self.sprite_sources: dict[str, tk.PhotoImage] = {}
@@ -52,7 +53,7 @@ class EthereaApp:
         self.log_box = tk.Text(self.sidebar, height=10, width=34, bg="#17131d", fg="#e4c7d4", insertbackground="#e4c7d4", relief="flat", wrap="word", font=("Consolas", 8), padx=9, pady=8, state="disabled")
         self.log_box.pack(fill="x")
 
-        self.controls = tk.Label(self.sidebar, text="WASD / Arrows: move\nSpace: attack\nQ: class ability\nE: Blood Vial\nR: recover focus\nB: save   L: load", bg="#211a2a", fg="#bba4b3", font=("Consolas", 8), justify="left", anchor="w")
+        self.controls = tk.Label(self.sidebar, text="WASD / Arrows: move\nSpace: attack\nQ: class ability\nE: Blood Vial\nR: recover focus\nB: save   L: load\nF11: fullscreen   Esc: exit", bg="#211a2a", fg="#bba4b3", font=("Consolas", 8), justify="left", anchor="w")
         self.controls.pack(fill="x", pady=(13, 0))
 
         button_row = tk.Frame(shell, bg="#120f18")
@@ -83,9 +84,11 @@ class EthereaApp:
             (HeroClass.ASHEN_BLADE, "Ashen Blade", "High damage · Cinder Arc"),
             (HeroClass.DREAMSEER, "Dreamseer", "Focus magic · Dream Lance"),
         ]
-        for hero_class, title, text in choices:
-            button = tk.Button(self.class_frame, text=f"{title}\n{text}", image=self.class_sprites.get(hero_class), compound="top", command=lambda value=hero_class: self.start_game(value), bg="#3a2639", fg="#ffeaf2", activebackground="#70415d", activeforeground="#ffffff", relief="flat", padx=15, pady=9, width=27, font=("Segoe UI", 9), cursor="hand2")
-            button.pack(pady=4)
+        choice_row = tk.Frame(self.class_frame, bg="#211a2a")
+        choice_row.pack()
+        for column, (hero_class, title, text) in enumerate(choices):
+            button = tk.Button(choice_row, text=f"{title}\n{text}", image=self.class_sprites.get(hero_class), compound="top", command=lambda value=hero_class: self.start_game(value), bg="#3a2639", fg="#ffeaf2", activebackground="#70415d", activeforeground="#ffffff", relief="flat", padx=8, pady=9, width=150, wraplength=140, justify="center", font=("Segoe UI", 9), cursor="hand2")
+            button.grid(row=0, column=column, padx=4)
 
     def _load_sprites(self) -> None:
         files = {
@@ -128,6 +131,12 @@ class EthereaApp:
 
     def handle_key(self, event: tk.Event[tk.Misc]) -> None:
         key = event.keysym.lower()
+        if key == "f11":
+            self.toggle_fullscreen()
+            return
+        if key == "escape" and self.fullscreen:
+            self.toggle_fullscreen()
+            return
         if self.state.mode == "class_select":
             choices = {"1": HeroClass.WARDEN, "2": HeroClass.ASHEN_BLADE, "3": HeroClass.DREAMSEER}
             if event.char in choices:
@@ -166,6 +175,10 @@ class EthereaApp:
         elif key == "l":
             self.load_game()
         self.render()
+
+    def toggle_fullscreen(self) -> None:
+        self.fullscreen = not self.fullscreen
+        self.root.attributes("-fullscreen", self.fullscreen)
 
     def resolve_choice(self, choice: str) -> None:
         if self.state.pending_choice == "shrine":
